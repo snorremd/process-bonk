@@ -7,8 +7,8 @@ use native_dialog::{MessageDialog, MessageType};
 
 fn main() {
     let mut system = System::new_all();
-    let mut monitored_process: Option<&sysinfo::Process> = None;
     let mut high_cpu_usage_start: Option<Instant> = None;
+    let mut pid = None;
 
     // Get the config file path from the command-line arguments
     let args: Vec<String> = env::args().collect();
@@ -36,29 +36,23 @@ fn main() {
 
     // Log that we are monitoring the process
     println!("process-bonk is now monitoring the {} process", process_name);
-    system.refresh_all();
 
     loop {
-        while monitored_process.is_none() {
-            // Find the process
-            let processes = system.processes();
-            for (pid, process) in processes.iter() {
-                if process.name() == process_name {
-                    println!("Found {} process with PID {}", process_name, pid);
-                    monitored_process = Some(process);
-                    break;
-                }
-            }
-
-            // If we didn't find the process, sleep for a while before trying again
-            if monitored_process.is_none() {
-                println!("{} process not found, sleeping for 60 seconds", process_name);
-                sleep(Duration::from_secs(60));
+        // Set pid if it is not set yet
+        if pid.is_none() {
+            if let Some(process) = system.processes_by_exact_name(process_name).next() {
+                pid = Some(process.pid());
+                println!("Found {} process with PID {}", process_name, pid.unwrap());
             }
         }
 
-        if let Some(process) = monitored_process {
+        // Update the specific process information in sysinfo
+        system.refresh_process(pid.unwrap());
+        
+        if let Some(process) = system.process(pid.unwrap()) {
+
             let cpu_usage = process.cpu_usage();
+
             if cpu_usage >= 98.0 {
                 match high_cpu_usage_start {
                     Some(start_time) if start_time.elapsed() > Duration::from_secs(300) => {
@@ -90,9 +84,10 @@ fn main() {
                 }
             } else {
                 // If the process is not using 100% CPU anymore, reset tracking
-                println!("{} is currently using {}% CPU", process_name, cpu_usage);
                 high_cpu_usage_start = None;
             }
+        } else {
+            println!("{} process not found, sleeping for 60 seconds", process_name);
         }
         // Sleep for a while before the next iteration
         sleep(Duration::from_secs(60));

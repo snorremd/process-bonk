@@ -19,6 +19,8 @@ process-bonk ./example.toml
 ```
 
 See [./example.toml](./example.toml) file for a config example.
+To get correct CPU usage you need to run the program with the correct privileges.
+E.g. for processes owned by root use sudo to run process as root.
 
 ### Homebrew service
 
