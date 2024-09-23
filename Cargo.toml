@@ -1,6 +1,6 @@
 [package]
 name = "process-bonk"
-version = "0.1.1"
+version = "0.2.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 native-dialog = "0.7.0"
 
-sysinfo = "0.30.5"
-toml = "0.8.8"
+sysinfo = "0.31.4"
+toml = "0.8.19"
+chrono = "0.4.38"
 

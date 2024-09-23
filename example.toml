@@ -1,1 +1,2 @@
 process_name = "Spotify"
+stats_path = "/path/to/folder/stats.csv"

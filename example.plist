@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>io.snorre.process-bonk</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/<youruser>/<path-to-binary>/process-bonk</string>
+        <string>/Users/<youruser>/<path-to-config>/process-bonk.toml</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>/var/log/process-bonk.log</string>
+    <key>StandardErrorPath</key>
+    <string>/var/log/process-bonk-error.log</string>
+</dict>
+</plist>
